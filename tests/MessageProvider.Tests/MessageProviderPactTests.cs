@@ -36,12 +36,13 @@ namespace MessageProvider.Tests
                             builder.WithContent(() =>
                             {
                                 FileLog.Log("WithContent");
-                                return new
-                                {
-                                    id = 1,
-                                    name = "testuser",
-                                    email = "testuser@mail.com"
-                                };
+                                // return new
+                                // {
+                                //     id = 1,
+                                //     name = "testuser",
+                                //     email = "testuser@mail.com"
+                                // };
+                                return ProviderStateMiddleware.getMessage();
                             }
                             );
                         });

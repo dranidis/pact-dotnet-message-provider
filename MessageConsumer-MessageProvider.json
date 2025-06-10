@@ -24,6 +24,29 @@
         }
       ],
       "type": "Asynchronous/Messages"
+    },
+    {
+      "contents": {
+        "content": {
+          "email": "testuser@mail.com",
+          "id": 1,
+          "name": "testuser",
+          "verified": true
+        },
+        "contentType": "application/json",
+        "encoded": false
+      },
+      "description": "a user created event",
+      "metadata": {
+        "contentType": "application/json"
+      },
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "user verified"
+        }
+      ],
+      "type": "Asynchronous/Messages"
     }
   ],
   "metadata": {
