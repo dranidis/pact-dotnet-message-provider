@@ -8,10 +8,20 @@ public class ProviderStateMiddleware
     private readonly Dictionary<string, Func<Task>> _providerStates;
     private readonly RequestDelegate _next;
 
-    private static object message;
+    private static object message = new
+    {
+        id = 1,
+        name = "testuser",
+        email = "a@g.vcom"
+    };
 
     public static object getMessage() => message;
 
+    public static async Task<object> getMessageAsync()
+    {
+        await Task.Delay(1); // Simulate async operation
+        return message;
+    }
 
     public ProviderStateMiddleware(RequestDelegate next)
     {

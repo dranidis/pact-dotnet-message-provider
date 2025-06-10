@@ -33,16 +33,16 @@ namespace MessageProvider.Tests
                         {
                             FileLog.Log("Description handler");
 
-                            builder.WithContent(() =>
+                            builder.WithContentAsync(async () =>
                             {
-                                FileLog.Log("WithContent");
+                                FileLog.Log("WithContentAsync");
                                 // return new
                                 // {
                                 //     id = 1,
                                 //     name = "testuser",
                                 //     email = "testuser@mail.com"
                                 // };
-                                return ProviderStateMiddleware.getMessage();
+                                return await ProviderStateMiddleware.getMessageAsync();
                             }
                             );
                         });
