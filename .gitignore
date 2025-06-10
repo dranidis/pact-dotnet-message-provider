@@ -1,0 +1,5 @@
+# 　dotnet
+bin/
+obj/
+*.log
+TestResults/
