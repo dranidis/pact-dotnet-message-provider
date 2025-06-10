@@ -8,43 +8,53 @@ public class ProviderStateMiddleware
     private readonly Dictionary<string, Func<Task>> _providerStates;
     private readonly RequestDelegate _next;
 
-    private static object message;
+    private static bool _isSocialAccountRegistered = false;
 
-    public static object getMessage() => message;
+    public static object CreateUserWasCreatedMessage()
+    {
+        FileLog.Log("Creating message for user creation event");
 
+        if (_isSocialAccountRegistered)
+        {
+            return new
+            {
+                id = 1,
+                name = "testuser",
+                email = "testuser@mail.com",
+                social = true
+            };
+        }
+
+        return new
+        {
+            id = 1,
+            name = "testuser",
+            email = "testuser@mail.com",
+            password = "testpassword",
+        };
+    }
 
     public ProviderStateMiddleware(RequestDelegate next)
     {
         _next = next;
         _providerStates = new Dictionary<string, Func<Task>>()
         {
-            ["user exists"] = EnsureUserExists,
-            ["user verified"] = EnsureUserIsVerified,
+            ["user registers with email and password"] = EnsureUserRegisters,
+            ["user registers with social account"] = EnsureUserRegistersWithSocialAccount,
         };
     }
 
-    private Task EnsureUserExists()
+    private Task EnsureUserRegisters()
     {
-        FileLog.Log("State handler - user exists");
-        message = new
-        {
-            id = 1,
-            name = "testuser",
-            email = "testuser@mail.com"
-        };
+        FileLog.Log("State handler - user registers with email and password");
+        _isSocialAccountRegistered = false;
         return Task.CompletedTask;
     }
 
-    private Task EnsureUserIsVerified()
+    private Task EnsureUserRegistersWithSocialAccount()
     {
-        FileLog.Log("State handler - user verified");
-        message = new
-        {
-            id = 1,
-            name = "testuser",
-            email = "testuser@mail.com",
-            verified = true
-        };
+        FileLog.Log("State handler - user registers with social account");
+        _isSocialAccountRegistered = true;
         return Task.CompletedTask;
     }
 
@@ -57,7 +67,7 @@ public class ProviderStateMiddleware
             return;
         }
 
-        context.Response.StatusCode = (int)HttpStatusCode.OK;
+        // context.Response.StatusCode = (int)HttpStatusCode.OK;
 
         if (context.Request.Method == HttpMethod.Post.ToString())
         {
@@ -73,7 +83,8 @@ public class ProviderStateMiddleware
             if (string.IsNullOrEmpty(providerState?.State)
                 || !_providerStates.TryGetValue(providerState.State, out Func<Task>? callback))
             {
-                return;
+                throw new ArgumentException(
+                    $"Unknown provider state: {providerState?.State ?? "null"}");
             }
 
             await callback.Invoke();

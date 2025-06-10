@@ -10,11 +10,8 @@ namespace MessageProvider.Tests
         private readonly string ProviderUrl = "http://localhost:5000";
         public MessageProviderPactTests()
         {
-            var builder = WebApplication.CreateBuilder();
-            var app = builder.Build();
-
+            var app = WebApplication.CreateBuilder().Build();
             app.UseMiddleware<ProviderStateMiddleware>();
-
             app.Urls.Add(ProviderUrl);
             app.Start();
         }
@@ -29,20 +26,14 @@ namespace MessageProvider.Tests
                 .WithMessages(scenarios =>
                 {
                     scenarios.Add(
-                        "a user created event", builder =>
+                        "user was created event", builder =>
                         {
-                            FileLog.Log("Description handler");
+                            FileLog.Log("Description handler: user was created event");
 
                             builder.WithContent(() =>
                             {
-                                FileLog.Log("WithContent");
-                                // return new
-                                // {
-                                //     id = 1,
-                                //     name = "testuser",
-                                //     email = "testuser@mail.com"
-                                // };
-                                return ProviderStateMiddleware.getMessage();
+                                FileLog.Log("WithContent: user was created event");
+                                return ProviderStateMiddleware.CreateUserWasCreatedMessage();
                             }
                             );
                         });
