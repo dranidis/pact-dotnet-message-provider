@@ -34,10 +34,9 @@ public class ProviderStateMiddleware
     }
     public static object CreateUserWasCreatedMessage()
     {
-        FileLog.Log("Creating message for user creation event");
-
         if (_isSocialAccountRegistered)
         {
+            FileLog.Log("Creating message for user creation event, social account registered");
             return new
             {
                 id = 1,
@@ -47,6 +46,7 @@ public class ProviderStateMiddleware
             };
         }
 
+        FileLog.Log("Creating message for user creation event, email and password registered");
         return new
         {
             id = 1,

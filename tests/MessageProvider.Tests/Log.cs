@@ -12,6 +12,6 @@ public static class FileLog
     public static void Log(string message)
     {
         using var writer = new StreamWriter(LogFilePath, true);
-        writer.WriteLine($"{DateTime.Now}: {message}");
+        writer.WriteLine(message);
     }
 }
