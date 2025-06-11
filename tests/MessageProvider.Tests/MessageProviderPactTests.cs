@@ -1,5 +1,4 @@
 using System.Text.Json;
-using PactNet;
 using PactNet.Verifier;
 
 namespace MessageProvider.Tests
@@ -10,6 +9,8 @@ namespace MessageProvider.Tests
         private readonly string ProviderUrl = "http://localhost:5000";
         public MessageProviderPactTests()
         {
+            FileLog.DeleteLog();
+
             var app = WebApplication.CreateBuilder().Build();
             app.UseMiddleware<ProviderStateMiddleware>();
             app.Urls.Add(ProviderUrl);
@@ -30,6 +31,9 @@ namespace MessageProvider.Tests
                         {
                             FileLog.Log("Description handler: user was created event");
 
+                            builder.WithMetadata(
+                                ProviderStateMiddleware.CreateUserWasCreatedMetadata()
+                            );
                             builder.WithContent(() =>
                             {
                                 FileLog.Log("WithContent: user was created event");

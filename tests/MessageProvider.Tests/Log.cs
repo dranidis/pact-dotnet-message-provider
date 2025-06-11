@@ -1,9 +1,17 @@
 public static class FileLog
 {
+    private static readonly string LogFilePath = "../../../../../pact.log";
+    public static void DeleteLog()
+    {
+        if (File.Exists(LogFilePath))
+        {
+            File.Delete(LogFilePath);
+        }
+    }
+
     public static void Log(string message)
     {
-        var logFilePath = "../../../../../pact.log";
-        using var writer = new StreamWriter(logFilePath, true);
+        using var writer = new StreamWriter(LogFilePath, true);
         writer.WriteLine($"{DateTime.Now}: {message}");
     }
 }
